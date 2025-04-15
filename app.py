@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from enhance import image_enhance
 from skimage.morphology import skeletonize, thin
 
-os.chdir("/app/")
+# os.chdir("/app/")
 
 def removedot(invertThin):
     temp0 = numpy.array(invertThin[:])
@@ -83,31 +83,35 @@ def main():
 	bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 	matches = sorted(bf.match(des1, des2), key= lambda match:match.distance)
 	# Plot keypoints
-	img4 = cv2.drawKeypoints(img1, kp1, outImage=None)
-	img5 = cv2.drawKeypoints(img2, kp2, outImage=None)
-	f, axarr = plt.subplots(1,2)
-	axarr[0].imshow(img4)
-	axarr[1].imshow(img5)
-	plt.show()
-	# Plot matches
-	img3 = cv2.drawMatches(img1, kp1, img2, kp2, matches, flags=2, outImg=None)
-	plt.imshow(img3)
-	plt.show()
+	# img4 = cv2.drawKeypoints(img1, kp1, outImage=None)
+	# img5 = cv2.drawKeypoints(img2, kp2, outImage=None)
+	# f, axarr = plt.subplots(1,2)
+	# axarr[0].imshow(img4)
+	# axarr[1].imshow(img5)
+	# plt.show()
+	# # Plot matches
+	# img3 = cv2.drawMatches(img1, kp1, img2, kp2, matches, flags=2, outImg=None)
+	# plt.imshow(img3)
+	# plt.show()
 
 	# Calculate score
 	score = 0;
 	for match in matches:
 		score += match.distance
 	score_threshold = 33
-	if score/len(matches) < score_threshold:
+
+	if score / len(matches) < score_threshold:
 		print("Fingerprint matches.")
+		sys.exit(0)
 	else:
 		print("Fingerprint does not match.")
+		sys.exit(1)
 
 
 
 if __name__ == "__main__":
 	try:
 		main()
-	except:
-		raise
+	except Exception as e:
+		print(f"Error al ejecutar: {e}")
+		sys.exit(2)
